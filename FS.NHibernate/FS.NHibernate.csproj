@@ -6,10 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Mapeamentos\Category.hbm.xml" />
     <None Remove="Mapeamentos\Product.hbm.xml" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Mapeamentos\Category.hbm.xml" />
     <EmbeddedResource Include="Mapeamentos\Product.hbm.xml" />
   </ItemGroup>
 

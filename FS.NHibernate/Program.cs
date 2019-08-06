@@ -20,7 +20,7 @@ namespace FS.NHibernate
             var dao = new ProductsDAO(session);
 
             //recupera
-            var product = dao.BuscaPorId(3);
+            var product = dao.BuscaPorId(1);
 
             //adiciona
             //var novoProduct = new Product()
@@ -31,8 +31,8 @@ namespace FS.NHibernate
             //dao.Adiciona(novoProduct);
 
             //altera
-            product.Price = 689.55M;
-            dao.Atualiza(product);
+            //product.Price = 689.55M;
+            //dao.Atualiza(product);
 
             session.Close();
 

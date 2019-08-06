@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="FS.NHibernate" namespace="FS.NHibernate.Entidades">
-  <class name="Product" table="products">
+  <class name="Category" table="categories">
     <id name="Id">
       <generator class="identity" />
     </id>
     <property name="Name" />
-    <property name="Price" />
 
     <!--Sobre o fetch: select = lazy loading (padrão) / join = eager loading-->
-    <many-to-one name="Category" column="category_id" fetch="select" />
+    <bag name="Products" fetch="select">
+      <key column="category_id"/>
+      <one-to-many class="Product"/>
+    </bag>
   </class>
 </hibernate-mapping>
