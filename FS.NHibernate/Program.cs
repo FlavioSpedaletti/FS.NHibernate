@@ -19,8 +19,24 @@ namespace FS.NHibernate
 
             var dao = new ProductsDAO(session);
 
-            //recupera
-            var product = dao.BuscaPorId(1);
+            //recupera todos
+            var products = dao.BuscaTodos();
+            products = dao.BuscaTodosPorOrdemAlfabetica();
+            products = dao.BuscaTodosPaginado(0, 1);
+            products = dao.BuscaTodosPaginado(2, 1);
+
+            //recupera por id
+            //var product = dao.BuscaPorId(1);
+
+            //recupera por nome
+            //var products = dao.BuscaPorNome("Mini curso Docker");
+
+            //recupera por categoria
+            //var products = dao.BuscaPorCategoria("Course");
+            //products = dao.BuscaPorCategoriaComFetchJoin("Course");
+
+            //recupera qtde de produtos por categoria
+            //var productsPerCategory = dao.BuscaQtdeProdutosPorCategoria();
 
             //adiciona
             //var novoProduct = new Product()
