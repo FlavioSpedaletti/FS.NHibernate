@@ -1,7 +1,7 @@
 ﻿using FS.NHibernate.Entidades;
 using NHibernate;
+using NHibernate.Criterion;
 using NHibernate.Transform;
-using System;
 using System.Collections.Generic;
 
 namespace FS.NHibernate.DAO
@@ -15,19 +15,19 @@ namespace FS.NHibernate.DAO
             _session = session;
         }
 
-        public IEnumerable<Product> BuscaTodos()
+        public ICollection<Product> BuscaTodos()
         {
             var query = _session.CreateQuery("from Product");
             return query.List<Product>();
         }
 
-        public IEnumerable<Product> BuscaTodosPorOrdemAlfabetica()
+        public ICollection<Product> BuscaTodosPorOrdemAlfabetica()
         {
             var query = _session.CreateQuery("from Product p order by p.Name");
             return query.List<Product>();
         }
 
-        public IEnumerable<Product> BuscaTodosPaginado(int comecaEm, int qtdePorPg)
+        public ICollection<Product> BuscaTodosPaginado(int comecaEm, int qtdePorPg)
         {
             var query = _session.CreateQuery("from Product p order by p.Name");
             query.SetFirstResult(comecaEm);
@@ -40,7 +40,7 @@ namespace FS.NHibernate.DAO
             return _session.Get<Product>(id);
         }
 
-        public IEnumerable<Product> BuscaPorNome(string nome)
+        public ICollection<Product> BuscaPorNome(string nome)
         {
             //Forma 1 - substituindo parâmetros pela posição
             //var query = _session.CreateQuery("from Product p where p.Name = ?");
@@ -52,7 +52,7 @@ namespace FS.NHibernate.DAO
             return query.List<Product>();
         }
 
-        public IEnumerable<Product> BuscaPorCategoria(string nome)
+        public ICollection<Product> BuscaPorCategoria(string nome)
         {
             var query = _session.CreateQuery("from Product p where p.Category.Name = :nome");
             query.SetParameter("nome", nome);
@@ -60,7 +60,7 @@ namespace FS.NHibernate.DAO
         }
 
         //Dessa forma 
-        public IEnumerable<Product> BuscaPorCategoriaComFetchJoin(string nome)
+        public ICollection<Product> BuscaPorCategoriaComFetchJoin(string nome)
         {
             var query = _session.CreateQuery("from Product p join fetch p.Category where p.Category.Name = :nome");
             query.SetParameter("nome", nome);
@@ -68,7 +68,7 @@ namespace FS.NHibernate.DAO
         }
 
         //isso aqui deveria estar no CategoriesDAO, mas é só um exemplo :)
-        public IEnumerable<ProdutosPorCategoria> BuscaQtdeProdutosPorCategoria()
+        public ICollection<ProdutosPorCategoria> BuscaQtdeProdutosPorCategoria()
         {
             //Forma 1 - manipulando lista de Object[]
             //var query = _session.CreateQuery("select p.Category, count(p) from Product p group by p.Category");
@@ -89,6 +89,29 @@ namespace FS.NHibernate.DAO
             query.SetResultTransformer(Transformers.AliasToBean<ProdutosPorCategoria>());
 
             return query.List<ProdutosPorCategoria>();
+        }
+
+        public ICollection<Product> BuscaPorNomePrecoMinimoECategoria(string nome, decimal preco, string nomeCategoria)
+        {
+            ICriteria criteria = _session.CreateCriteria<Product>();
+
+            if (!string.IsNullOrEmpty(nome))
+            {
+                criteria.Add(Restrictions.Eq("Name", nome));
+            }
+
+            if (preco > 0)
+            {
+                criteria.Add(Restrictions.Ge("Price", preco));
+            }
+
+            if (!string.IsNullOrEmpty(nomeCategoria))
+            {
+                ICriteria criteriaCat = criteria.CreateCriteria("Category");
+                criteriaCat.Add(Restrictions.Eq("Name", nomeCategoria));
+            }
+
+            return criteria.List<Product>();
         }
 
         public void Adiciona(Product usuario)

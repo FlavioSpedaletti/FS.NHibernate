@@ -38,6 +38,9 @@ namespace FS.NHibernate
             //recupera qtde de produtos por categoria
             //var productsPerCategory = dao.BuscaQtdeProdutosPorCategoria();
 
+            //recupera por nome, preço mínimo e/OutOfMemoryException categoria (Comparison criteria)
+            //var products = dao.BuscaPorNomePrecoMinimoECategoria("", 0, "");
+
             //adiciona
             //var novoProduct = new Product()
             //{
